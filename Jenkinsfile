@@ -48,4 +48,3 @@ node {
     //         sh 'rm terraform.tfvars'
     //     }
     // }
-}
