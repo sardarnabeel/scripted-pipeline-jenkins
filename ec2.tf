@@ -20,7 +20,7 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = var.ami_id
   instance_type = "t2.micro"
-
+  subnet_id     = aws_subnet.public_subnet.id
   tags = {
     Name = var.instance_name
   }
