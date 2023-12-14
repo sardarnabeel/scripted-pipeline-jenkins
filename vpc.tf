@@ -13,7 +13,7 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.1.0/24"
-  availability_zone       = "us-east-2"  # Change this to your preferred availability zone
+  availability_zone       = "us-east-2a"  # Change this to your preferred availability zone
 
   map_public_ip_on_launch = true
 
