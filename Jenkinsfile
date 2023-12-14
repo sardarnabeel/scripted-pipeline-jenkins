@@ -2,25 +2,24 @@
 
 node {
     stage('Terraform Apply') {
-        withCredentials([string(credentialsId: 'aws-sso-credentials', variable: 'AWS_SSO_CREDS')]) {
-            withAWS(region: 'us-east-1', credentials: 'nabeel') {
-                sh '''
-                    echo "${AWS_SSO_CREDS}" > terraform.tfvars
-                    terraform init
-                    terraform apply -auto-approve
-                '''
-            }
+        script {
+            // Use AWS SSO login
+            sh "aws sso login --profile ${AWS_PROFILE}"
+
+            // Initialize and apply Terraform
+            sh 'terraform init'
+            sh 'terraform apply -auto-approve'
         }
     }
 
     def instanceId = sh(script: 'terraform output instance_id', returnStdout: true).trim()
 
     stage('Stop or Start EC2 Instance') {
-        withAWS(region: 'us-east-1', credentials: 'nabeel') {
+        script {
             if (params.STOP_INSTANCE) {
-                sh "aws ec2 stop-instances --instance-ids ${instanceId} --region us-east-1"
+                sh "aws ec2 stop-instances --instance-ids ${instanceId} --region ${AWS_REGION}"
             } else if (params.START_INSTANCE) {
-                sh "aws ec2 start-instances --instance-ids ${instanceId} --region us-east-1"
+                sh "aws ec2 start-instances --instance-ids ${instanceId} --region ${AWS_REGION}"
             } else {
                 echo "No action specified. Please choose either stop or start."
                 currentBuild.result = 'FAILURE'
@@ -30,13 +29,10 @@ node {
     }
 
     stage('Terraform Destroy') {
-        withCredentials([string(credentialsId: 'aws-sso-credentials', variable: 'AWS_SSO_CREDS')]) {
-            withAWS(region: 'us-east-1', credentials: 'nabeel') {
-                sh '''
-                    terraform destroy -auto-approve
-                    rm terraform.tfvars
-                '''
-            }
+        script {
+            // Destroy resources
+            sh 'terraform destroy -auto-approve'
+            sh 'rm terraform.tfvars'
         }
     }
 }
