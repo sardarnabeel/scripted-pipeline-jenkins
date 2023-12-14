@@ -114,6 +114,9 @@ node {
                 // Use AWS SSO login
                 sh 'aws sso login'
 
+                // Display AWS CLI configuration for debugging
+                sh 'aws configure list'
+
                 // Initialize and apply Terraform
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve'
