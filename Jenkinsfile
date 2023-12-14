@@ -7,12 +7,13 @@ node {
         booleanParam(name: 'STOP_INSTANCE', defaultValue: false, description: 'Stop EC2 Instance')
         booleanParam(name: 'START_INSTANCE', defaultValue: false, description: 'Start EC2 Instance')
     }
-
+    environment {
+    AWS_PROFILE = "${params.AWS_PROFILE}"
+  }
     stage('Terraform Apply') {
         script {
             // Use AWS SSO login
-            sh "aws sso login --profile ${params.AWS_PROFILE}"
-
+            sh "aws sso login --profile ${AWS_PROFILE}"
             // Initialize and apply Terraform
             sh 'terraform init'
             sh 'terraform apply -auto-approve'
