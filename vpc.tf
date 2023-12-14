@@ -5,7 +5,7 @@ resource "aws_vpc" "my_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "my-vpc"
+    Name = "nabeel -vpc"
   }
 }
 
@@ -18,7 +18,7 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public-subnet"
+    Name = "nabeel-subnet"
   }
 }
 
