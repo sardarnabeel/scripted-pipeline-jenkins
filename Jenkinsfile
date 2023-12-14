@@ -13,7 +13,7 @@ node {
     stage('Terraform Apply') {
         script {
             // Use AWS SSO login
-            sh "aws sso login --profile ${AWS_PROFILE}"
+            sh "aws sso login --profile ${env.AWS_PROFILE}"
             // Initialize and apply Terraform
             sh 'terraform init'
             sh 'terraform apply -auto-approve'
