@@ -109,12 +109,15 @@ node {
 
     stage('Terraform Apply') {
         script {
-            // Use AWS SSO login
-            sh "aws sso login --profile ${params.AWS_PROFILE}"
+            // Set AWS_PROFILE environment variable
+            withEnv(["AWS_PROFILE=${params.AWS_PROFILE}"]) {
+                // Use AWS SSO login
+                sh 'aws sso login'
 
-            // Initialize and apply Terraform
-            sh 'terraform init'
-            sh 'terraform apply -auto-approve'
+                // Initialize and apply Terraform
+                sh 'terraform init'
+                sh 'terraform apply -auto-approve'
+            }
         }
     }
 
@@ -134,3 +137,4 @@ node {
         }
     }
 }
+
